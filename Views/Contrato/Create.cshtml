@@ -1,0 +1,117 @@
+@model InmobiliariaParedes.Models.Contrato
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="inmuebleid" class="control-label"></label>
+                <select asp-for="inmuebleid" id="inmuebleid" class="form-control"></select>
+                <span asp-validation-for="inmuebleid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="inquilinoid" class="control-label"></label>
+                <select asp-for="inquilinoid" id="inquilinoid" class="form-control"></select>
+                <span asp-validation-for="inquilinoid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fecha_inicio" class="control-label"></label>
+                <input asp-for="fecha_inicio" type="date" class="form-control" />
+                <span asp-validation-for="fecha_inicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fecha_fin" class="control-label"></label>
+                <input asp-for="fecha_fin" type="date" class="form-control" />
+                <span asp-validation-for="fecha_fin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="monto_mes" class="control-label"></label>
+                <input asp-for="monto_mes" id="monto_mes" class="form-control" />
+                <span asp-validation-for="monto_mes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="garante_nombre" class="control-label"></label>
+                <input asp-for="garante_nombre" class="form-control" />
+                <span asp-validation-for="garante_nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="garante_apellido" class="control-label"></label>
+                <input asp-for="garante_apellido" class="form-control" />
+                <span asp-validation-for="garante_apellido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="garante_dni" class="control-label"></label>
+                <input asp-for="garante_dni" class="form-control" />
+                <span asp-validation-for="garante_dni" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="garante_tel" class="control-label"></label>
+                <input asp-for="garante_tel" class="form-control" />
+                <span asp-validation-for="garante_tel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $.ajax({
+            type:'GET',
+            url:'@Url.Action("ObtenerInmueblesJson","Inmueble")',
+            data: {},
+            success: function (data){
+                data.forEach(function(e){
+                    $('#inmuebleid').append($('<option>',
+                    {
+                        value: e.id,
+                        text : e.direccion
+                    }));
+                })
+                $('#monto_mes').val(data[0].precio)
+            }
+        })
+
+        $.ajax({
+            type:'GET',
+            url:'@Url.Action("ObtenerInquilinosJson","Inquilino")',
+            data: {},
+            success: function (data){
+                data.forEach(function(e){
+                    $('#inquilinoid').append($('<option>',
+                    {
+                        value: e.id,
+                        text : e.nombre
+                    }));
+                })
+            }
+        })
+
+        $('#inmuebleid').change(function(){
+            $.ajax({
+                type:'GET',
+                url:'@Url.Action("ObtenerInmuebleIdJson","Inmueble")',
+                data: {id: $('#inmuebleid').val()},
+                success: function (data){
+                    $('#monto_mes').val(data.precio)
+                }
+            })
+        })
+    </script>
+}

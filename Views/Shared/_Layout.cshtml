@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InmobiliariaParedes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                @if (!User.Identity.IsAuthenticated)
+				{
+					<a class="navbar-brand" asp-controller="Home" asp-action="Index"><span class="lnr lnr-home"></span> Inicio</a>
+                    <button type="button" class="btn btn-primary" onclick="modalLogin();"><span class="lnr lnr-enter"></span>Acceder</button>
+				}else{
+                    @if (User.IsInRole("Administrador") || User.IsInRole("SuperAdministrador"))
+                    {
+                        <a class="nav-link text-dark" asp-controller="Usuario" asp-action="Index">USUARIOS</a>
+                    }
+                    <a class="nav-link text-dark" asp-controller="Propietario" asp-action="Index">PROPIETARIOS</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index">INQUILINOS</a>
+                    <a class="nav-link text-dark" asp-controller="Inmueble" asp-action="Index">INMUEBLES</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index">CONTRATOS</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index">PAGOS</a>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="lnr lnr-user"></span> @User.Identity.Name
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a></li>
+                            <li><a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a></li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - InmobiliariaParedes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.2/i18n/es_es.json"
+                }
+            });
+        });
+
+        // $('#fDesde').val(formatDate(new Date()));
+        $('#buscarFechas').submit(function(e){
+            e.preventDefault();
+            window.location.replace("Inmueble/BuscarPorFecha/" + $('#inicio').val()+ "/" + $("#fin").val());
+        })
+
+        function modalLogin() {
+			var modal = document.getElementById("modal_login");
+			var abrirModal = () => {//función flecha
+				//modales: https://getbootstrap.com/docs/4.0/components/modal/
+				$('#modal_login').modal("show");
+			}
+			if (!modal) {
+				$.ajax({
+					url: `@Url.Action("LoginModal", "Usuario")`,
+				}).done(res => {
+					console.log("Modal: ", res);
+					var div = document.createElement("div");
+					div.innerHTML = res;
+					document.body.appendChild(div);
+					abrirModal();
+				}).fail(res => {
+					console.log("Error: ", res);
+				});
+			} else {
+				abrirModal();
+			}
+		}
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

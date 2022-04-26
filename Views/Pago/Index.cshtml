@@ -1,0 +1,65 @@
+@model IEnumerable<InmobiliariaParedes.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+@if(ViewBag.ContratoId == null){
+    <p>
+        <a asp-action="Create">CREAR NUEVO PAGO</a>
+    </p>
+}else{
+    <p>
+        <a asp-action="CreateConContrato" asp-route-id="@ViewBag.ContratoId">CREAR NUEVO PAGO</a>
+    </p>
+}
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contratoid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.importe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.num_pago)
+            </th>
+            <th>ACCIONES</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.contratoid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.importe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.num_pago)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp;
+                <a asp-action="Details" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Detalles"><span class="lnr lnr-license"></span></a>&nbsp;
+                <a asp-action="Delete" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="lnr lnr-trash"></span></a>&nbsp;
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
