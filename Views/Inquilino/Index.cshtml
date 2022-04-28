@@ -4,11 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="d-inline">INQUILINOS | <a asp-action="Create" class="d-inline">NUEVO</a></h1>
+<hr>
+<br>
 
-<p>
-    <a asp-action="Create">CREAR NUEVO INQUILINO</a>
-</p>
 <table class="table" id="myTable">
     <thead>
         <tr>
@@ -67,13 +66,38 @@
                 @Html.DisplayFor(modelItem => item.estadoNombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp;
-                <a asp-action="Details" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Detalles"><span class="lnr lnr-license"></span></a>&nbsp;
-                @*Este se cambia*@
-                <a asp-controller="Inmueble" asp-action="BuscarPorPropietario" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Inmuebles"><span class="lnr lnr-apartment"></span></a>&nbsp;
-                <a asp-action="Delete" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="lnr lnr-trash"></span></a>&nbsp;
+                <a asp-action="Edit" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;
+                <a asp-action="Details" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Detalles"><i class="fa-solid fa-circle-info"></i></a>&nbsp;
+                <a asp-controller="Contrato" asp-action="BuscarPorInquilino" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Contratos"><i class="fa-solid fa-file-contract"></i></a>&nbsp;
+                <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="mandarId(@item.id)"><i class="fa-solid fa-trash-can"></i></a>&nbsp;
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">BAJA INQUILINO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>¡DARA DE BAJA UN INQUILINO!</p>
+                <p>¿DESEA CONTINUAR?</p>
+                <form asp-action="Delete" method="POST">
+                    <input id="inquilinoid" class="form-control" type="hidden" name="inquilinoid">
+                    <br>
+                    <input type="submit" value="DALEEEEE" class="btn btn-danger" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mandarId(e){
+        $("#inquilinoid").val(e);
+    }
+</script>

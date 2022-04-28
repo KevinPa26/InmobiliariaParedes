@@ -15759,11 +15759,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\kevin\\Documentos\\GitHub\\InmobiliariaParedes\\Views\\Pago\\Delete.cshtml",
-      "TargetPath": "Views\\Pago\\Delete.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\kevin\\Documentos\\GitHub\\InmobiliariaParedes\\Views\\Contrato\\Details.cshtml",
       "TargetPath": "Views\\Contrato\\Details.cshtml",
       "FileKind": "mvc"

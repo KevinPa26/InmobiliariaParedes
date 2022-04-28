@@ -11,12 +11,14 @@ namespace InmobiliariaParedes.Controllers
         private readonly RepositorioContrato repositorio;
         private readonly RepositorioInmueble repositorioInmueble;
         private readonly RepositorioInquilino repositorioInquilino;
+        private readonly RepositorioPago repositorioPago;
 
         public ContratoController()
         {
-            repositorio = new RepositorioContrato();
-            repositorioInmueble = new RepositorioInmueble();
-            repositorioInquilino = new RepositorioInquilino();
+            repositorio             = new RepositorioContrato();
+            repositorioInmueble     = new RepositorioInmueble();
+            repositorioInquilino    = new RepositorioInquilino();
+            repositorioPago         = new RepositorioPago();
         }
         // GET: PropietarioController
         [Authorize]
@@ -38,6 +40,13 @@ namespace InmobiliariaParedes.Controllers
         {
             var lista = repositorio.ObtenerPorInmueble(id);
             return Json(lista);
+        }
+
+        [Authorize]
+        public ActionResult BuscarPorInquilino(int id)
+        {
+            var lista = repositorio.ObtenerPorInquilino(id);
+            return View("Index", lista);
         }
 
         // GET: PropietarioController/Details/5
@@ -141,17 +150,22 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         public ActionResult Delete(int id)
         {
-            var inmueble = repositorio.ObtenerPorId(id);
-            return View(inmueble);
+            var contrato = repositorio.ObtenerPorId(id);
+            return View(contrato);
         }
 
         // POST: PropietarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection collection)
         {
             try
             {
+                int id = Int32.Parse(collection["contratoidbaja"]);
+                var pagos = repositorioPago.ObtenerPorContrato(id);
+                foreach (var pago in pagos){
+                    repositorioPago.Baja(pago.id);
+                }
                 repositorio.Baja(id);
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));

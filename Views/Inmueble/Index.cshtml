@@ -4,12 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-<p>
-    <a asp-action="Create">CREAR NUEVO INMUEBLE</a>
-</p>
-
+<h1 class="d-inline">INMUEBLES | <a asp-action="Create" class="d-inline">NUEVO</a></h1>
+<hr>
 <br>
+
 <div class="row">
     <div class="col-md-12">
         <form id="buscarFechas" action="@Url.Action("BuscarPorFecha", "Inmueble")" method="get">
@@ -91,7 +89,7 @@
                 @Html.DisplayFor(modelItem => item.cant_ambiente)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.precio)
+                $@Html.DisplayFor(modelItem => item.precio)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.superficie)
@@ -100,18 +98,18 @@
                 @Html.DisplayFor(modelItem => item.estadoNombre)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp;
-                <a asp-action="Details" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Detalles"><span class="lnr lnr-license"></span></a>&nbsp;
-                <a asp-controller="Contrato" asp-action="BuscarPorInmueble" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Contratos"><span class="lnr lnr-file-empty"></span></a>&nbsp;
-                <a asp-action="Delete" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="lnr lnr-trash"></span></a>&nbsp;
-                <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="mandarId(@item.id)" data-toggle="tooltip" data-placement="top" title="Crear Contrato"><span class="lrn lnr-file-add"></span></a>&nbsp;
+                <a asp-action="Edit" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;
+                <a asp-action="Details" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Detalles"><i class="fa-solid fa-circle-info"></i></a>&nbsp;
+                <a asp-controller="Contrato" asp-action="BuscarPorInmueble" asp-route-id="@item.id" data-toggle="tooltip" data-placement="top" title="Contratos"><i class="fa-solid fa-file-contract"></i></a>&nbsp;
+                <a href="" data-bs-toggle="modal" data-bs-target="#modalBaja" data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="mandarIdBaja(@item.id);"><i class="fa-solid fa-trash-can"></i></a>&nbsp;
+                <a href="" data-bs-toggle="modal" data-bs-target="#modalContrato" onclick="mandarId(@item.id)" data-toggle="tooltip" data-placement="top" title="Crear Contrato"><i class="fa-regular fa-file"></i></a>&nbsp;
             </td>
         </tr>
 }
     </tbody>
 </table>
 
-<div class="modal fade" id="exampleModal">
+<div class="modal fade" id="modalContrato">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -172,6 +170,26 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalBaja">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">BAJA INMUEBLE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>¡DARA DE BAJA UN INMUEBLE!</p>
+                <p>¿DESEA CONTINUAR?</p>
+                <form asp-action="Delete" method="POST">
+                    <input id="inmuebleidbaja" class="form-control" type="hidden" name="inmuebleidbaja">
+                    <br>
+                    <input type="submit" value="DALEEEEE" class="btn btn-danger" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     let formatDate = (date)=>{
         let dia = date.getDate();
@@ -184,6 +202,10 @@
         let anio = date.getFullYear()
         let formatted_date =  anio+ "-" + mes + "-" + dia
         return formatted_date;
+    }
+
+    function mandarIdBaja(e){
+        $("#inmuebleidbaja").val(e);
     }
 
     function mandarId(e){

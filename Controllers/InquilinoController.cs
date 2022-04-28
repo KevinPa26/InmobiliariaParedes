@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaParedes.Models;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace InmobiliariaParedes.Controllers
 {
@@ -17,6 +18,10 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             var lista = repositorio.ObtenerTodos();
             return View(lista);
         }
@@ -56,8 +61,6 @@ namespace InmobiliariaParedes.Controllers
                 repositorio.Alta(i);
 
                 TempData["Mensaje"] = "Inquilino creado correctamente";
-
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -119,17 +122,18 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection collection)
         {
             try
             {
+                int id = Int32.Parse(collection["inquilinoid"]);
                 repositorio.Baja(id);
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 

@@ -149,17 +149,18 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection collection)
         {
             try
             {
+                int id = Int32.Parse(collection["inmuebleidbaja"]);
                 repositorio.Baja(id);
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 

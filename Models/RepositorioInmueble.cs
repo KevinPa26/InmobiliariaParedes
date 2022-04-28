@@ -42,12 +42,12 @@ namespace InmobiliariaParedes.Models
 			int res = -1;
 			using (MySqlConnection connection = new MySqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Inmueble SET estado=@estado" + $"WHERE Id = @id";
+				string sql = $"UPDATE Inmueble SET estado=@estado" + $" WHERE id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@estado", 0);
+                    command.Parameters.AddWithValue("@estado", 2);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -205,9 +205,7 @@ namespace InmobiliariaParedes.Models
             Inmueble entidad = null;
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                string sql = $"SELECT i.id, i.propietarioid, i.direccion, i.uso, i.tipo, i.cant_ambiente, i.precio, i.superficie, i.estado, i.creado, i.modificado" +
-                    $" FROM inmueble i INNER JOIN contrato c ON c.inmuebleid = i.id" +
-					$" WHERE (i.estado in (1,2) AND c.fecha_fin < @inicio AND c.fecha_fin < @fin)";
+                string sql = $"SELECT * FROM inmueble WHERE id in (SELECT resultado.id FROM (SELECT inmuebleid as id, MAX(fecha_fin) AS Fecha FROM contrato GROUP BY inmuebleid) as resultado WHERE resultado.Fecha < @inicio AND resultado.Fecha < @fin) || estado = 1";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
 					command.Parameters.Add("@inicio", MySqlDbType.Date).Value = inicio;

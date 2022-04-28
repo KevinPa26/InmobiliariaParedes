@@ -39,12 +39,12 @@ namespace InmobiliariaParedes.Models
 			using (MySqlConnection connection = new MySqlConnection(connectionString))
 			{
 				string sql = $"UPDATE Inquilino SET estado=@estado" +
-					$"WHERE Id = @id";
+					$" WHERE id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
 					command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@estado", 0);
+                    command.Parameters.AddWithValue("@estado", 2);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();

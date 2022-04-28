@@ -4,12 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<h1 class="d-inline">USUARIOS | <a asp-action="Create" class="d-inline">NUEVO</a></h1>
+<hr>
+<br>
+<table class="table" id="myTable">
     <thead>
         <tr>
             <th>
@@ -55,10 +53,36 @@
 				@Html.DisplayFor(modelItem => item.rolNombre)
 			</td>
 			<td>
-				<a asp-action="Edit" asp-route-id="@item.id" title="Edit"><span class="lnr lnr-pencil"></span></a>&nbsp;
-				<a asp-action="Eliminar" asp-route-id="@item.id" title="Delete"><span class="lnr lnr-cross"></span></a>
+				<a asp-action="Edit" asp-route-id="@item.id" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;
+				<a href="" data-bs-toggle="modal" data-bs-target="#modalBaja" title="Eliminar" onclick="mandarId(@item.id);"><i class="fa-solid fa-trash-can"></i></a>
 			</td>
 		</tr>
 }
     </tbody>
 </table>
+
+<div class="modal fade" id="modalBaja">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ELIMINAR USUARIO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>¡USTED ELIMINARÁ UN USUARIO!</p>
+                <p>¿DESEA CONTINUAR?</p>
+                <form asp-action="Delete" method="POST">
+                    <input id="usuarioid" class="form-control" type="hidden" name="usuarioid">
+                    <br>
+                    <input type="submit" value="DALE" class="btn btn-danger" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mandarId(e){
+        $("#usuarioid").val(e);
+    }
+</script>

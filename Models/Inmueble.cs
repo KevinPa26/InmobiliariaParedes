@@ -10,7 +10,8 @@ namespace InmobiliariaParedes.Models
     {
         DISPONIBLE = 1,
         NODISPONIBLE = 2,
-        SUSPENDIDO = 3
+        ALQUILADO = 3,
+        SUSPENDIDO = 4
     }
 
     public enum enEstadosUso

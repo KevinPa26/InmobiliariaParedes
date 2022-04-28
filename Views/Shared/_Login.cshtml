@@ -1,28 +1,27 @@
 @model InmobiliariaParedes.Models.LoginView
 
-<h4>Acceso</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
         <form asp-controller="Usuario" asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group text-center">
                 <label asp-for="Usuario" class="control-label"></label>
                 <input asp-for="Usuario" class="form-control" />
                 <span asp-validation-for="Usuario" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group text-center">
                 <label asp-for="Clave" class="control-label"></label>
                 <input asp-for="Clave" class="form-control" />
                 <span asp-validation-for="Clave" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="d-grid gap-2 col-12 mx-auto">
+                <br>
                 <input type="submit" value="Entrar" class="btn btn-primary" />
             </div>
         </form>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-2"></div>
 </div>
 
 @section Scripts {

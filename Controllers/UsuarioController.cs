@@ -122,19 +122,59 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         public ActionResult Edit(int id, Usuario u)
         {
+            
             var vista = nameof(Edit);//de que vista provengo
             try
             {
-                if (!User.IsInRole("Administrador"))//no soy admin
+                var actual = repositorio.ObtenerPorId(id);
+                if (u.avatarFile != null && u.id > 0)
+                {
+                    string wwwPath = environment.WebRootPath;
+                    string path = Path.Combine(wwwPath, "Uploads");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    //Path.GetFileName(u.avatarFile.FileName);//este nombre se puede repetir
+                    string fileName = "avatar_" + u.id + Path.GetExtension(u.avatarFile.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+                    u.avatar = Path.Combine("/Uploads", fileName);
+                    // Esta operación guarda la foto en memoria en el ruta que necesitamos
+                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                    {
+                        u.avatarFile.CopyTo(stream);
+                    }
+                }else{
+                    u.avatar = actual.avatar;
+                }
+
+                if(u.clave == null){
+                    u.clave = actual.clave;
+                }else{
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password:           u.clave,
+                        salt:               System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                        prf:                KeyDerivationPrf.HMACSHA1,
+                        iterationCount:     1000,
+                        numBytesRequested:  256 / 8));
+                    u.clave = hashed;
+                }
+
+                if (!User.IsInRole("Administrador") && !User.IsInRole("SuperAdministrador"))//no soy admin
                 {
                     vista = nameof(Perfil);//solo puedo ver mi perfil
                     var usuarioActual = repositorio.ObtenerPorEmail(User.Identity.Name);
                     if (usuarioActual.id != id)//si no es admin, solo puede modificarse él mismo
+                    {
                         return RedirectToAction(nameof(Index), "Home");
+                    }else{
+                        repositorio.Modificacion(u);
+                        return RedirectToAction(nameof(Index), "Home");
+                    }
+                }else{
+                    repositorio.Modificacion(u);
+                    return RedirectToAction(nameof(Index), "Usuario");
                 }
-                // TODO: Add update logic here
-
-                return RedirectToAction(vista);
             }
             catch (Exception ex)
             {//colocar breakpoints en la siguiente línea por si algo falla
@@ -153,17 +193,18 @@ namespace InmobiliariaParedes.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                int id = Int32.Parse(collection["usuarioid"]);
+                repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
         [Authorize]

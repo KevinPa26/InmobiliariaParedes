@@ -45,12 +45,11 @@ namespace InmobiliariaParedes.Models
 			int res = -1;
 			using (MySqlConnection connection = new MySqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Inmueble SET estado=@estado" + $"WHERE Id = @id";
+				string sql = $"DELETE FROM Contrato " + $"WHERE id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@estado", 0);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -175,6 +174,47 @@ namespace InmobiliariaParedes.Models
                 string sql = $"SELECT id, inmuebleid, inquilinoid, fecha_inicio, fecha_fin, monto_mes, garante_nombre, garante_apellido, garante_dni, garante_tel, creado, modificado " +
                     $"FROM contrato" +
                     $" WHERE inmuebleid=@id";
+				using (MySqlCommand command = new MySqlCommand(sql, connection))
+				{
+                    command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato contrato = new Contrato
+						{
+							id                  = reader.GetInt32(0),
+                            inmuebleid          = reader.GetInt32(1),
+                            inquilinoid         = reader.GetInt32(2),
+                            fecha_inicio        = reader.GetDateTime(3),
+                            fecha_fin           = reader.GetDateTime(4),
+                            monto_mes           = reader.GetDouble(5),
+                            garante_nombre      = reader.GetString(6),
+                            garante_apellido    = reader.GetString(7),
+                            garante_dni         = reader.GetString(8),
+							garante_tel         = reader.GetString(9),
+							creado              = reader.GetDateTime(10),
+							modificado          = reader.GetDateTime(11),
+                            inmueble            = repoInmueble.ObtenerPorId(reader.GetInt32(1)),
+                            inquilino           = repoInquilino.ObtenerPorId(reader.GetInt32(2))
+						};
+						res.Add(contrato);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+        }
+
+		public IList<Contrato> ObtenerPorInquilino(int id)
+		{
+			IList<Contrato> res = new List<Contrato>();
+			using (MySqlConnection connection = new MySqlConnection(connectionString))
+			{
+                string sql = $"SELECT id, inmuebleid, inquilinoid, fecha_inicio, fecha_fin, monto_mes, garante_nombre, garante_apellido, garante_dni, garante_tel, creado, modificado " +
+                    $"FROM contrato" +
+                    $" WHERE inquilinoid=@id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;

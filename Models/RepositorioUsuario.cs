@@ -45,7 +45,7 @@ namespace InmobiliariaParedes.Models
 			int res = -1;
 			using (MySqlConnection connection = new MySqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Usuarios WHERE Id = @id";
+				string sql = $"DELETE FROM Usuario WHERE id = @id";
 				using (MySqlCommand command = new MySqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -131,13 +131,13 @@ namespace InmobiliariaParedes.Models
 					{
 						e = new Usuario
 						{
-							id = reader.GetInt32(0),
-							nombre = reader.GetString(1),
-							apellido = reader.GetString(2),
-							avatar = reader["Avatar"].ToString(),
-							email = reader.GetString(4),
-							clave = reader.GetString(5),
-							rol = reader.GetInt32(6),
+							id			= reader.GetInt32(0),
+							nombre		= reader.GetString(1),
+							apellido	= reader.GetString(2),
+							avatar		= reader["Avatar"].ToString(),
+							email		= reader.GetString(4),
+							clave		= reader.GetString(5),
+							rol			= reader.GetInt32(6),
 						};
 					}
 					connection.Close();
@@ -163,13 +163,13 @@ namespace InmobiliariaParedes.Models
 					{
 						e = new Usuario
 						{
-							id = reader.GetInt32(0),
-							nombre = reader.GetString(1),
-							apellido = reader.GetString(2),
-							avatar = reader["Avatar"].ToString(),
-							email = reader.GetString(4),
-							clave = reader.GetString(5),
-							rol = reader.GetInt32(6),
+							id			= reader.GetInt32(0),
+							nombre		= reader.GetString(1),
+							apellido	= reader.GetString(2),
+							avatar		= reader["avatar"].ToString(),
+							email		= reader.GetString(4),
+							clave		= reader.GetString(5),
+							rol			= reader.GetInt32(6),
 						};
 					}
 					connection.Close();

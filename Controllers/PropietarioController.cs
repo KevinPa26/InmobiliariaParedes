@@ -9,10 +9,12 @@ namespace InmobiliariaParedes.Controllers
     public class PropietarioController : Controller
     {
         private readonly RepositorioPropietario repositorio;
+        private readonly RepositorioInmueble repositorioInmueble;
 
         public PropietarioController()
         {
             repositorio = new RepositorioPropietario();
+            repositorioInmueble = new RepositorioInmueble();
         }
         // GET: PropietarioController}
 
@@ -122,17 +124,22 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection collection)
         {
+            int id = Int32.Parse(collection["propietarioid"]);
             try
             {
+                var inmuebles = repositorioInmueble.BuscarPorPropietario(id);
+                foreach (var inmueble in inmuebles){
+                    repositorioInmueble.Baja(inmueble.id);
+                }
                 repositorio.Baja(id);
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
         }
 
