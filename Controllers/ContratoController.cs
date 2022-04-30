@@ -24,6 +24,10 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             var lista = repositorio.ObtenerTodos();
             return View(lista);
         }
@@ -86,6 +90,8 @@ namespace InmobiliariaParedes.Controllers
                 c.modificado            = System.DateTime.Now;
 
                 repositorio.Alta(c);
+
+                repositorioInmueble.Alquilado(c.inmuebleid);
 
                 TempData["Mensaje"] = "Contrato creado correctamente";
 

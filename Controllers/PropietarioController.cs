@@ -21,6 +21,10 @@ namespace InmobiliariaParedes.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             var lista = repositorio.ObtenerTodos();
             return View(lista);
         }

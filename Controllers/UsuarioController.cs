@@ -31,6 +31,10 @@ namespace InmobiliariaParedes.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Index()
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             var lista = repositorio.ObtenerTodos();
             return View(lista);
         }
@@ -168,6 +172,7 @@ namespace InmobiliariaParedes.Controllers
                     {
                         return RedirectToAction(nameof(Index), "Home");
                     }else{
+                        u.rol = usuarioActual.rol;
                         repositorio.Modificacion(u);
                         return RedirectToAction(nameof(Index), "Home");
                     }

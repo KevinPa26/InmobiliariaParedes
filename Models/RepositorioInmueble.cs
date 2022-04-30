@@ -55,6 +55,26 @@ namespace InmobiliariaParedes.Models
 			}
 			return res;
 		}
+
+		public int Alquilado(int id)
+		{
+			int res = -1;
+			using (MySqlConnection connection = new MySqlConnection(connectionString))
+			{
+				string sql = $"UPDATE Inmueble SET estado=@estado" + $" WHERE id = @id";
+				using (MySqlCommand command = new MySqlCommand(sql, connection))
+				{
+					command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@estado", 3);
+					connection.Open();
+					res = command.ExecuteNonQuery();
+					connection.Close();
+				}
+			}
+			return res;
+		}
+
 		public int Modificacion(Inmueble inmueble)
 		{
 			int res = -1;
